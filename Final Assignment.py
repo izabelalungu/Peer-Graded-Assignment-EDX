@@ -125,7 +125,7 @@ html_data=requests.get(url).text
 # Parse the html data using `beautiful_soup`.
 # 
 
-# In[43]:
+# In[76]:
 
 
 beautiful_soup = BeautifulSoup(html_data,"html.parser") 
@@ -150,23 +150,31 @@ beautiful_soup = BeautifulSoup(html_data,"html.parser")
 # </details>
 # 
 
-# In[ ]:
+# In[80]:
 
 
+# Find the second tbody element (the first one is for the stock price chart)
+revenue_table = beautiful_soup.find_all("tbody")[1]
+
+# Initialize an empty DataFrame to store the revenue data
 tesla_revenue = pd.DataFrame(columns=["Date", "Revenue"])
 
-for row in beautiful_soup.find("tbody").find_all("tr"):
-    col = row.find_all("td")
-    date =col[0].text
-    revenue =col[1].text
+# Loop through each row in the revenue table
+for row in revenue_table.find_all("tr"):
+    # Get the columns for the current row
+    cols = row.find_all("td")
+    # Extract the date and revenue data from the columns
+    date = cols[0].text.strip()
+    revenue = cols[1].text.strip().replace(",", "").replace("$", "")
+    # Add a new row to the DataFrame
+    tesla_revenue = tesla_revenue.append({"Date": date, "Revenue": revenue}, ignore_index=True)
     
-    tesla_revenue = tesla_revenue.append({"Date":date, "Revenue":revenue}, ignore_index=True)
 
 
 # Execute the following line to remove the comma and dollar sign from the `Revenue` column. 
 # 
 
-# In[ ]:
+# In[60]:
 
 
 tesla_revenue["Revenue"] = tesla_revenue['Revenue'].str.replace(',|\$',"")
@@ -175,7 +183,7 @@ tesla_revenue["Revenue"] = tesla_revenue['Revenue'].str.replace(',|\$',"")
 # Execute the following lines to remove an null or empty strings in the Revenue column.
 # 
 
-# In[ ]:
+# In[61]:
 
 
 tesla_revenue.dropna(inplace=True)
@@ -186,10 +194,10 @@ tesla_revenue = tesla_revenue[tesla_revenue['Revenue'] != ""]
 # Display the last 5 row of the `tesla_revenue` dataframe using the `tail` function. Take a screenshot of the results.
 # 
 
-# In[ ]:
+# In[62]:
 
 
-tesla_revenue.tail(5)
+tesla_revenue.tail()
 
 
 # ## Question 3: Use yfinance to Extract Stock Data
@@ -216,11 +224,11 @@ gme_data = GameStop.history(period="max")
 # **Reset the index** using the `reset_index(inplace=True)` function on the gme_data DataFrame and display the first five rows of the `gme_data` dataframe using the `head` function. Take a screenshot of the results and code from the beginning of Question 3 to the results below.
 # 
 
-# In[29]:
+# In[70]:
 
 
 gme_data.reset_index(inplace=True)
-gme_data.head(5)
+gme_data.head()
 
 
 # ## Question 4: Use Webscraping to Extract GME Revenue Data
@@ -229,7 +237,7 @@ gme_data.head(5)
 # Use the `requests` library to download the webpage https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/stock.html. Save the text of the response as a variable named `html_data`.
 # 
 
-# In[30]:
+# In[65]:
 
 
 url="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0220EN-SkillsNetwork/labs/project/stock.html"
@@ -239,7 +247,7 @@ html_data=requests.get(url).text
 # Parse the html data using `beautiful_soup`.
 # 
 
-# In[31]:
+# In[71]:
 
 
 beautiful_soup = BeautifulSoup(html_data,"html.parser")
@@ -264,29 +272,30 @@ beautiful_soup = BeautifulSoup(html_data,"html.parser")
 # </details>
 # 
 
-# In[35]:
+# In[78]:
 
 
-#extracting the table
+revenue_table = beautiful_soup.find_all("tbody")[1]
+
 gme_revenue = pd.DataFrame(columns=["Date", "Revenue"])
-for row in beautiful_soup.find("tbody").find_all("tr"):
-    col = row.find_all("td")
-    date =col[0].text
-    revenue =col[1].text
+
+for row in revenue_table.find_all("tr"):
+    cols = row.find_all("td")
+    date = cols[0].text.strip()
+    revenue = cols[1].text.strip().replace(",", "").replace("$", "")
+    gme_revenue = gme_revenue.append({"Date": date, "Revenue": revenue}, ignore_index=True)
     
-    gme_revenue = gme_revenue.append({"Date":date, "Revenue":revenue},ignore_index=True)
-    
-# removing the comma and dollar sign from the Revenue column
+# removing the comma and dollar sign from the Revenue column - did not specify about the empty cells
 gme_revenue["Revenue"] = gme_revenue['Revenue'].str.replace(',|\$',"")
 
 
 # Display the last five rows of the `gme_revenue` dataframe using the `tail` function. Take a screenshot of the results.
 # 
 
-# In[36]:
+# In[73]:
 
 
-gme_revenue.tail(5)
+gme_revenue.tail()
 
 
 # ## Question 5: Plot Tesla Stock Graph
@@ -295,7 +304,7 @@ gme_revenue.tail(5)
 # Use the `make_graph` function to graph the Tesla Stock Data, also provide a title for the graph. The structure to call the `make_graph` function is `make_graph(tesla_data, tesla_revenue, 'Tesla')`. Note the graph will only show data upto June 2021.
 # 
 
-# In[51]:
+# In[81]:
 
 
 make_graph(tesla_data, tesla_revenue, 'Tesla\'s Stock Data')
@@ -307,7 +316,7 @@ make_graph(tesla_data, tesla_revenue, 'Tesla\'s Stock Data')
 # Use the `make_graph` function to graph the GameStop Stock Data, also provide a title for the graph. The structure to call the `make_graph` function is `make_graph(gme_data, gme_revenue, 'GameStop')`. Note the graph will only show data upto June 2021.
 # 
 
-# In[52]:
+# In[69]:
 
 
 make_graph(gme_data, gme_revenue, 'GameStop\'s Stock Data')
