@@ -19,3 +19,5 @@ _All lab exercises have definition and output in all files_
 
 ### Path to lab
 [link](labs/PY0220EN/Final Assignment.ipynb "Lab Assesments")
+
+#### Clean code file has the text and the code without any 'adds'.
