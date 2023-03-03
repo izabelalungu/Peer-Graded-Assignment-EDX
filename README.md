@@ -3,6 +3,7 @@ This is a repo for Hands-on Lab: Analyzing Historical Stock/Revenue Data and Bui
 
 ## Fast check
 Final Assignment.ipynb contains the jupyter lab completed.
+Clean Code Contains every line of code and question texts without output.
 
 ## Steps described at the beginning of the lab:
 1. intro: This environment is to do the Peer Graded Assignment.
