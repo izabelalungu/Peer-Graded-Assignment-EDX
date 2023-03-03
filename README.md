@@ -1,6 +1,9 @@
 # Peer-Graded-Assignment-EDX
 This is a repo for Hands-on Lab: Analyzing Historical Stock/Revenue Data and Building a Dashboard
 
+## Fast check
+Final Assignment.ipynb contains the jupyter lab completed.
+
 ## Steps described at the beginning of the lab:
 1. intro: This environment is to do the Peer Graded Assignment.
 2. In case you need to download the lab notebook (.ipynb file) click HERE to download the lab notebook.
